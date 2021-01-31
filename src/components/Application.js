@@ -1,7 +1,25 @@
-import React from 'react';
+import { render } from '@testing-library/react';
+import React, { useState } from 'react';
+import DeckList from './DeckList';
+import NavbarApp from './NavbarApp'
+import { useAuth0 } from "@auth0/auth0-react";
 
-export default function Application() {
+function Application() {
+  const { user } = useAuth0();
+  const [secret] = useState(user['https://faunadb.com/id/secret']);
+
   return(
-    <h2>Application</h2>
+    <div className="h-screen">
+      <NavbarApp />
+
+      <div className="flex flex-wrap max-w-4xl m-auto px-4 lg:px-0 mt-8">
+
+        <h4 className="w-full mb-2">Your Decks</h4>
+        <DeckList secret={secret} />
+
+      </div>
+    </div>
   );
 }
+
+export default Application;
