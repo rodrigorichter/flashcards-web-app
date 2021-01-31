@@ -1,23 +1,27 @@
 {
   "files": {
-    "main.css": "/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/static/js/main.bfafa893.chunk.js",
-    "main.js.map": "/static/js/main.bfafa893.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.72b17a58.js",
-    "runtime-main.js.map": "/static/js/runtime-main.72b17a58.js.map",
-    "static/js/2.67b8e7e4.chunk.js": "/static/js/2.67b8e7e4.chunk.js",
-    "static/js/2.67b8e7e4.chunk.js.map": "/static/js/2.67b8e7e4.chunk.js.map",
-    "static/js/3.81dedceb.chunk.js": "/static/js/3.81dedceb.chunk.js",
-    "static/js/3.81dedceb.chunk.js.map": "/static/js/3.81dedceb.chunk.js.map",
+    "main.css": "/static/css/main.3c03dd8c.chunk.css",
+    "main.js": "/static/js/main.e148489f.chunk.js",
+    "main.js.map": "/static/js/main.e148489f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.22d80285.js",
+    "runtime-main.js.map": "/static/js/runtime-main.22d80285.js.map",
+    "static/js/2.34bf40e8.chunk.js": "/static/js/2.34bf40e8.chunk.js",
+    "static/js/2.34bf40e8.chunk.js.map": "/static/js/2.34bf40e8.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.8c8b27cf.chunk.css.map": "/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.67b8e7e4.chunk.js.LICENSE.txt": "/static/js/2.67b8e7e4.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/static/media/logo.6ce24c58.svg"
+    "static/css/main.3c03dd8c.chunk.css.map": "/static/css/main.3c03dd8c.chunk.css.map",
+    "static/js/2.34bf40e8.chunk.js.LICENSE.txt": "/static/js/2.34bf40e8.chunk.js.LICENSE.txt",
+    "static/media/Merriweather-Bold.7b45103b.ttf": "/static/media/Merriweather-Bold.7b45103b.ttf",
+    "static/media/Merriweather-Regular.55c73e48.ttf": "/static/media/Merriweather-Regular.55c73e48.ttf",
+    "static/media/SourceSansPro-Italic.3c01996d.ttf": "/static/media/SourceSansPro-Italic.3c01996d.ttf",
+    "static/media/SourceSansPro-Regular.efa76f83.ttf": "/static/media/SourceSansPro-Regular.efa76f83.ttf",
+    "static/media/SourceSansPro-SemiBold.43cc81b4.ttf": "/static/media/SourceSansPro-SemiBold.43cc81b4.ttf",
+    "static/media/bg_hero.b5b77e11.svg": "/static/media/bg_hero.b5b77e11.svg",
+    "static/media/logo.f3a9df31.svg": "/static/media/logo.f3a9df31.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.72b17a58.js",
-    "static/js/2.67b8e7e4.chunk.js",
-    "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.bfafa893.chunk.js"
+    "static/js/runtime-main.22d80285.js",
+    "static/js/2.34bf40e8.chunk.js",
+    "static/css/main.3c03dd8c.chunk.css",
+    "static/js/main.e148489f.chunk.js"
   ]
 }
