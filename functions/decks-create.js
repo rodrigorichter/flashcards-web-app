@@ -12,6 +12,7 @@ exports.handler = (event, context, callback) => {
     secret: data.secret
   })
 
+
   console.log("Function `deck-create` invoked", data)
   const deckItem = {
     name: data['name']
