@@ -7,24 +7,13 @@ exports.handler = (event, context, callback) => {
   const data = JSON.parse(event.body)
 
   client = new faunadb.Client({
-    secret: data.secret
+    secret: data['secret']
   })
-
   return client.query(
 
     q.Map(
-      q.Paginate(q.Documents(q.Collection("Decks"))),
-      q.Lambda("deckRef",
-      q.Let(
-          {
-            deckDoc: q.Get(q.Var("deckRef"))
-          },
-          {
-            id: q.Select(["ref", "id"], q.Var("deckDoc")),
-            name: q.Select(["data", "name"], q.Var("deckDoc")),
-          }
-        )
-      )
+      q.Paginate(q.Match(q.Index("all_Decks"))),
+      q.Lambda('deckRef', q.Get(q.Var('deckRef')))
     )
 
   )

@@ -9,6 +9,7 @@ export default class DeckList extends React.Component {
       decks: [],
       isFetching: false,
       isCreatingDeck: false,
+      isLoadingDeck: false,
       newDeckFieldInputValue: '',
     };
   }
@@ -30,11 +31,15 @@ export default class DeckList extends React.Component {
   }
 
   createDeck(data) {
+    this.setState({isLoadingDeck: true, newDeckFieldInputValue: ''});
+
     return fetch('/.netlify/functions/decks-create', {
       body: JSON.stringify(data),
       method: 'POST'
     }).then(response => {
       return response.json()
+    }).then(data => {
+      this.setState({isLoadingDeck: false, decks: this.state.decks.concat(data)});
     })
   }
 
@@ -54,7 +59,7 @@ export default class DeckList extends React.Component {
   }
 
   componentDidMount() {
-    //this.fetchDecks(this.props.secret);
+    this.fetchDecks({'secret': this.props.secret});
   }
 
   toggleDeckField() {
@@ -63,28 +68,29 @@ export default class DeckList extends React.Component {
 
   render() {
     var newDeckField = null;
-    const myDeck = {
-      name: "Hello World Deck!",
-    }
+    var loadingDeckField = null;
 
     if (this.state.isCreatingDeck) {
       newDeckField = (
         <div>
-          <div class="relative rounded shadow my-2">
-            <input type="text" onChange={e => this.setState({newDeckFieldInputValue: e.target.value})} value={this.state.newDeckFieldInputValue} placeholder="Name" className="ring-2 ring-transparent focus:ring-primary border border-gray-400 focus:border-transparent rounded w-full p-4" />
+          <div className="relative rounded shadow my-2">
+            <input autoFocus type="text" onChange={e => this.setState({newDeckFieldInputValue: e.target.value})} value={this.state.newDeckFieldInputValue} placeholder="Name" className="ring-2 ring-transparent focus:ring-primary border border-gray-400 focus:border-transparent rounded w-full p-4" />
           </div>
-          { this.state.newDeckFieldInputValue ?
-            <Button regular
-                    withicon
-                    onClick={() => this.createDeck({name: this.state.newDeckFieldInputValue, secret: this.props.secret})}>
-                      <HiPlus size={20} />&nbsp;New Deck
-            </Button>
-            : <Button regulardisabled
-                      disabled
-                      withicon>
+          <div className="flex">
+            { this.state.newDeckFieldInputValue ?
+              <Button regular
+              withicon
+              onClick={() => this.createDeck({'name': this.state.newDeckFieldInputValue, 'secret': this.props.secret})}>
                         <HiPlus size={20} />&nbsp;New Deck
               </Button>
-          }
+              : <Button regulardisabled
+              disabled
+              withicon>
+                          <HiPlus size={20} />&nbsp;New Deck
+                </Button>
+            }
+            <Button textblack onClick={() => this.toggleDeckField()}>Cancel</Button>
+          </div>
         </div>
       );
     }
@@ -94,12 +100,25 @@ export default class DeckList extends React.Component {
       );
     }
 
-    const listItems = this.state.decks.map((d) =>
-      <div id={d.id} className="relative rounded shadow my-2">
+    if (this.state.isLoadingDeck) {
+      loadingDeckField = (
+        <div>
+          <div className="animate-pulse relative rounded shadow my-2">
+            <div className="h-16 p-2">
+            <div class="mt-2 h-4 bg-gray-500 rounded w-48"></div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+
+    const listItems = this.state.decks && this.state.decks.map((d) =>
+      <div id={d.ref['@ref'].id} className="relative rounded shadow my-2">
         <div className="h-16 p-2">
-          <p className="">{d.name}</p>
+          <p className="">{d.data.name}</p>
           <div className="absolute right-2 inset-y-2 flex items-center">
-            <Button icon onClick={() => this.deleteDeck(d.id)}><HiOutlineTrash size={24} /></Button>
+            <Button icon onClick={() => this.deleteDeck({'id': d.ref['@ref'].id, 'secret': this.props.secret})}><HiOutlineTrash size={24} /></Button>
           </div>
         </div>
 
@@ -109,6 +128,7 @@ export default class DeckList extends React.Component {
     return (
       <div className="w-full">
         {listItems}
+        {loadingDeckField}
         {newDeckField}
       </div>
     )

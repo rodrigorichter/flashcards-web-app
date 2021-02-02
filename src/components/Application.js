@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import React, { useState } from 'react';
 import DeckList from './DeckList';
+import DeckModal from './DeckModal';
 import NavbarApp from './NavbarApp'
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -16,6 +17,7 @@ function Application() {
 
         <h4 className="w-full mb-2">Your Decks</h4>
         <DeckList secret={secret} />
+        <DeckModal />
 
       </div>
     </div>
