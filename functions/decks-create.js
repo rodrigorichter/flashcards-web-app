@@ -9,13 +9,15 @@ exports.handler = (event, context, callback) => {
   const data = JSON.parse(event.body)
 
   client = new faunadb.Client({
-    secret: data.secret
+    secret: data['secret']
   })
 
 
   console.log("Function `deck-create` invoked", data)
   const deckItem = {
-    name: data['name']
+    data: {
+      "name": data['name']
+    }
   }
   /* construct the fauna query */
   return client.query(q.Create(q.Ref("classes/Decks"), deckItem))
