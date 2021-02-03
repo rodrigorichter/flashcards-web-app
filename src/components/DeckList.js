@@ -105,7 +105,7 @@ export default class DeckList extends React.Component {
         <div>
           <div className="animate-pulse relative rounded shadow my-2">
             <div className="h-16 p-2">
-            <div class="mt-2 h-4 bg-gray-500 rounded w-48"></div>
+            <div className="mt-2 h-4 bg-gray-500 rounded w-48"></div>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default class DeckList extends React.Component {
 
 
     const listItems = this.state.decks && this.state.decks.map((d) =>
-      <div id={d.ref['@ref'].id} className="relative rounded shadow my-2">
+      <div id={d.ref['@ref'].id} className="relative rounded shadow my-2" onClick={(e) => {this.props.setActiveDeck(d)}}>
         <div className="h-16 p-2">
           <p className="">{d.data.name}</p>
           <div className="absolute right-2 inset-y-2 flex items-center">
