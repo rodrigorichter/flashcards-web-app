@@ -9,7 +9,7 @@ function Button(props) {
   else if (props.regular) className += "bg-primary hover:bg-primarydarker text-white ";
   if (props.text) className += "text-primary bg-transparent hover:bg-primarymuchlighter ";
   if (props.textblack) className += "text-textsecond bg-transparent hover:bg-blackhover ";
-  if (props.icon) className += "text-textsecond hover:text-textfirst p-2 hover:bg-blackhover ";
+  if (props.icon) className += "mr-0 text-textsecond hover:text-textfirst p-1 hover:bg-blackhover ";
   else if (props.iconwhite) className += "text-white p-2 hover:bg-whitehover "; else className+= " px-4 py-2 ";
 
   // pick any of these
