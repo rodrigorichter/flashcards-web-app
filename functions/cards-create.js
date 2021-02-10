@@ -12,14 +12,27 @@ exports.handler = (event, context, callback) => {
     secret: data['secret']
   })
 
-  return client.query(q.Delete(q.Ref(q.Collection('Deck'), data['id'])))
+
+  console.log("Function `cards-create` invoked", data)
+  const cardItem = {
+    data: {
+      "front": data['front'],
+      "back": data['back'],
+      "deck": q.Ref(q.Collection("Deck"), data['deckId'])
+    }
+  }
+  /* construct the fauna query */
+  return client.query(q.Create(q.Ref("classes/Card"), cardItem))
   .then((response) => {
+    console.log("success", response)
+    /* Success! return the response with statusCode 200 */
     return callback(null, {
       statusCode: 200,
       body: JSON.stringify(response)
     })
   }).catch((error) => {
-    console.log(error);
+    console.log("error", error)
+    /* Error! return the error with statusCode 400 */
     return callback(null, {
       statusCode: 400,
       body: JSON.stringify(error)

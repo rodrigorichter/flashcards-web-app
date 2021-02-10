@@ -105,7 +105,7 @@ export default class DeckList extends React.Component {
         <div>
           <div className="animate-pulse relative rounded shadow my-2">
             <div className="h-16 p-2">
-            <div className="mt-2 h-4 bg-gray-500 rounded w-48"></div>
+            <div className="mt-2 h-4 bg-gray-300 rounded w-48"></div>
             </div>
           </div>
         </div>

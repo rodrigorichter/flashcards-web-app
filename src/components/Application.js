@@ -26,7 +26,7 @@ function Application() {
 
         <h4 className="w-full mb-2">Your Decks</h4>
         <DeckList secret={secret} setActiveDeck = {handleSetActiveDeck}/>
-        {activeDeck ? <DeckModal deck={activeDeck} close = {handleCloseDeckModal} /> : null}
+        {activeDeck ? <DeckModal secret={secret} deck={activeDeck} close = {handleCloseDeckModal} /> : null}
 
       </div>
     </div>

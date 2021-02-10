@@ -13,13 +13,13 @@ function Button(props) {
   else if (props.iconwhite) className += "text-white p-2 hover:bg-whitehover "; else className+= " px-4 py-2 ";
 
   // pick any of these
-  if (props.large) className += "text-xl "; else className += "text-sm ";
+  if (props.large) className += "text-xl "; else className += "text-xs ";
   if (props.withicon) className+= "flex items-center ";
 
 
 
   return (
-    <button className={(props.className || "") + className}
+    <button className={(props.className || "") + " " + className}
             onClick={props.onClick}
     >
       {props.children}

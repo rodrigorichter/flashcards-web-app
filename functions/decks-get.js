@@ -12,7 +12,7 @@ exports.handler = (event, context, callback) => {
   return client.query(
 
     q.Map(
-      q.Paginate(q.Match(q.Index("all_Decks"))),
+      q.Paginate(q.Match(q.Index("allDecks"))),
       q.Lambda('deckRef', q.Get(q.Var('deckRef')))
     )
 

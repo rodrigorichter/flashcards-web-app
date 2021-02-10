@@ -16,11 +16,14 @@ exports.handler = (event, context, callback) => {
   console.log("Function `deck-create` invoked", data)
   const deckItem = {
     data: {
-      "name": data['name']
+      "name": data['name'],
+      "new_count": 0,
+      "learning_count": 0,
+      "to_review_count": 0
     }
   }
   /* construct the fauna query */
-  return client.query(q.Create(q.Ref("classes/Decks"), deckItem))
+  return client.query(q.Create(q.Ref("classes/Deck"), deckItem))
   .then((response) => {
     console.log("success", response)
     /* Success! return the response with statusCode 200 */
