@@ -1,6 +1,7 @@
 import React from 'react';
-import { HiOutlineBookOpen, HiOutlineCog, HiOutlineTrash, HiOutlineArrowLeft, HiPlus } from 'react-icons/hi';
+import { HiOutlineBookOpen, HiOutlineCog, HiOutlineTrash, HiOutlineArrowLeft, HiPlus, HiOutlinePencil, HiOutlineViewList } from 'react-icons/hi';
 import Button from './Button';
+import Tooltip from './Tooltip';
 
 export default class DeckModal extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ export default class DeckModal extends React.Component {
       isInSettings: false,
       isBrowsingCards: false,
       isCreatingCard: false,
+      isLoadingCard: false,
       newCardFrontFieldInputValue: '',
       newCardBackFieldInputValue: '',
       cards: []
@@ -35,7 +37,7 @@ export default class DeckModal extends React.Component {
   }
 
   createCard(data) {
-    this.setState({newCardFrontFieldInputValue: '', newCardBackFieldInputValue: ''});
+    this.setState({isLoadingCard: true, newCardFrontFieldInputValue: '', newCardBackFieldInputValue: ''});
 
     return fetch('/.netlify/functions/cards-create', {
       body: JSON.stringify(data),
@@ -43,31 +45,38 @@ export default class DeckModal extends React.Component {
     }).then(response => {
       return response.json()
     }).then(data => {
+      this.setState({isLoadingCard: false, cards: this.state.cards.concat(data)});
+    })
+  }
+
+  deleteCard(data) {
+    const cards = [...this.state.cards];
+    cards.splice(this.state.cards.findIndex(function(c) {
+      return c.ref['@ref'].id === data.id;
+    }), 1);
+    this.setState({cards: cards});
+
+    return fetch('/.netlify/functions/cards-delete', {
+      body: JSON.stringify(data),
+      method: 'POST'
+    }).then(response => {
+      return response.json();
     })
   }
 
   render() {
     var newCardView = null;
-    const deckView = (
-      <div>
-        <div class="sm:flex sm:items-start flex-wrap">
-          <h3 class="text-lg leading-6 font-medium text-textprimary w-full" id="modal-headline">
-              {this.props.deck.data.name}
-          </h3>
-          <div class="mt-2 flex justify-end w-full">
-              <Button icon onClick={(e) => { this.setState({isBrowsingCards: true}); this.fetchCards({'deckId': this.props.deck.ref['@ref'].id, 'secret': this.props.secret}); }}><HiOutlineBookOpen size={24} /></Button>
-              <Button icon onClick={(e) => { this.setState({isInSettings: true}) }}><HiOutlineCog size={24} /></Button>
-              <Button icon><HiOutlineTrash size={24} /></Button>
+    var loadingCardField = null;
 
-          </div>
-        </div>
+    const studyView = (
+      <div>
         <div className="rounded shadow-sm border p-4 mt-2">
           {this.state.isStudying ? null :
             <div className="flex justify-center flex-col">
               <p className="text-center text-textsecond">New: {this.props.deck.data.new_count}</p>
               <p className="text-center text-textsecond">Learning: {this.props.deck.data.learning_count}</p>
               <p className="text-center text-textsecond">To review: {this.props.deck.data.to_review_count}</p>
-              <Button regular className="my-12 w-36 self-center">Study Now</Button>
+              <Button regular className="my-12 w-36 self-center">Start Study</Button>
             </div>
           }
         </div>
@@ -79,6 +88,10 @@ export default class DeckModal extends React.Component {
         <div className="p-1">
           <p className="">{c.data.front}</p>
           <p className="text-textsecond text-sm">{c.data.back}</p>
+          <div className="absolute right-2 inset-y-2 flex items-center">
+            <Button icon ><HiOutlinePencil size={24} /></Button>
+            <Button icon onClick={() => this.deleteCard({'id': c.ref['@ref'].id, 'secret': this.props.secret})}><HiOutlineTrash size={24} /></Button>
+          </div>
         </div>
 
       </div>
@@ -117,41 +130,68 @@ export default class DeckModal extends React.Component {
       );
     }
 
+    if (this.state.isLoadingCard) {
+      loadingCardField = (
+        <div>
+          <div className="relative border-b animate-pulse">
+            <div className="p-1">
+              <div className="mt-2 h-4 bg-gray-300 rounded w-48"></div>
+              <div className="mt-2 h-4 bg-gray-300 rounded w-32"></div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     const cardsView = (
-      <div>
+      <div className="max-h-inherit pb-8 flex flex-col">
         <div className="flex border-b pb-2 mb-2">
           <Button icon onClick={(e) => { this.setState({isBrowsingCards: false}) }}><HiOutlineArrowLeft size={24}/></Button>
           <span className="ml-4 text-textsecond leading-8">Browsing cards</span>
         </div>
-        {cardsListItems}
+        <div className="overflow-y-auto">
+          {cardsListItems}
+          {loadingCardField}
+        </div>
         {newCardView}
 
       </div>
     )
 
-    const mainView = () => {
-      if (this.state.isStudying)
-        return null;
-      if (this.state.isBrowsingCards)
-        return cardsView;
-      if (this.state.isInSettings)
-        return null;
-      else
-        return deckView;
-    };
+    const settingsView = (
+      <div className="max-h-inherit pb-8">
+         <div className="flex border-b pb-2 mb-2">
+          <Button icon onClick={(e) => { this.setState({isInSettings: false}) }}><HiOutlineArrowLeft size={24}/></Button>
+          <span className="ml-4 text-textsecond leading-8">Deck Settings</span>
+        </div>
+      </div>
+    );
 
     return (
-      <div className="fixed z-10 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div className="fixed z-10 inset-0 overflow-hidden">
+        <div class="flex items-end justify-center h-screen max-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <div class="fixed inset-0 transition-opacity" aria-hidden="true">
             <div class="absolute inset-0 bg-gray-500 opacity-75" onClick={(e) => this.props.close()}></div>
           </div>
 
           <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-          <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-2xl w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              {mainView()}
-
+          <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-2xl w-full max-h-9/10" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 max-h-inherit">
+              <div className="max-h-inherit pb-8">
+                <div class="sm:flex sm:items-start flex-wrap">
+                  <h3 class="text-lg leading-6 font-medium text-textprimary w-full" id="modal-headline">
+                      {this.props.deck.data.name}
+                  </h3>
+                  <div class="mt-2 flex justify-end w-full">
+                      <Tooltip content="Study"><Button icon onClick={(e) => { this.setState({isInSettings: false, isBrowsingCards: false}) }}><HiOutlineBookOpen size={24} /></Button></Tooltip>
+                      <Tooltip content="Browse cards"><Button icon onClick={(e) => { this.setState({isBrowsingCards: true, isInSettings: false}); this.fetchCards({'deckId': this.props.deck.ref['@ref'].id, 'secret': this.props.secret}); }}><HiOutlineViewList size={24} /></Button></Tooltip>
+                      <Tooltip content="Settings"><Button icon onClick={(e) => { this.setState({isInSettings: true, isBrowsingCards: false}) }}><HiOutlineCog size={24} /></Button></Tooltip>
+                  </div>
+                </div>
+                {this.state.isBrowsingCards && cardsView}
+                {this.state.isInSettings && settingsView}
+                {(!this.state.isInSettings && !this.state.isBrowsingCards) && studyView}
+              </div>
             </div>
           </div>
 

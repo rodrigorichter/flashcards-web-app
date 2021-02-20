@@ -10,6 +10,8 @@
 
   --color-black-hover  :rgba(0, 0, 0, 0.13);
   --color-white-hover  : rgba(255, 255, 255, 0.25);
+
+  --color-danger  : #F2994A;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:ital,wght@0,400;0,600;1,400&display=swap');
@@ -30,6 +32,10 @@
 
   h4 {
     @apply font-sourcepro text-4xl;
+  }
+
+  a, a:active, a:focus, button, button:active, button:focus, div, div:active, div:focus {
+    outline: none;
   }
 
 }

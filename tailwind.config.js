@@ -9,6 +9,15 @@ module.exports = {
       height: {
         content: 'min-content',
       },
+      maxHeight: {
+        '0': '0',
+        '1/4': '25vh',
+        '1/2': '50vh',
+        '3/4': '75vh',
+        '9/10': '90vh',
+        'full': '100vh',
+        'inherit': 'inherit',
+       },
       colors: {
         primary: 'var(--color-primary)',
         primarydarker: 'var(--color-primary-darker)',
@@ -18,6 +27,7 @@ module.exports = {
         textdisabled: 'var(--color-text-disabled)',
         blackhover: 'var(--color-black-hover)',
         whitehover: 'var(--color-white-hover)',
+        danger: 'var(--color-danger)',
       },
       fontFamily: {
         sourcepro: ['Source Pro Sans', 'sans'],

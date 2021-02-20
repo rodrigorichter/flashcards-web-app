@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from './Button';
+import ConfirmationDialog from './ConfirmationDialog';
 import { HiOutlineTrash, HiPlus } from "react-icons/hi";
+import Tooltip from './Tooltip';
 
 export default class DeckList extends React.Component {
   constructor(props) {
@@ -11,6 +13,8 @@ export default class DeckList extends React.Component {
       isCreatingDeck: false,
       isLoadingDeck: false,
       newDeckFieldInputValue: '',
+      onConfirm: () => {},
+      isConfirmationDialogOpen: false,
     };
   }
 
@@ -46,7 +50,7 @@ export default class DeckList extends React.Component {
   deleteDeck(data) {
     const decks = [...this.state.decks];
     decks.splice(this.state.decks.findIndex(function(d) {
-      return d.id === data;
+      return d.ref['@ref'].id === data.id;
     }), 1);
     this.setState({decks: decks});
 
@@ -62,8 +66,8 @@ export default class DeckList extends React.Component {
     this.fetchDecks({'secret': this.props.secret});
   }
 
-  toggleDeckField() {
-    this.setState({isCreatingDeck: !this.state.isCreatingDeck});
+  handleCloseConfirmationDialog = () => {
+    this.setState({isConfirmationDialogOpen: false});
   }
 
   render() {
@@ -89,14 +93,14 @@ export default class DeckList extends React.Component {
                           <HiPlus size={20} />&nbsp;New Deck
                 </Button>
             }
-            <Button textblack onClick={() => this.toggleDeckField()}>Cancel</Button>
+            <Button textblack onClick={() => this.setState({isCreatingDeck: !this.state.isCreatingDeck})}>Cancel</Button>
           </div>
         </div>
       );
     }
     else {
       newDeckField = (
-        <Button text withicon onClick={() => this.toggleDeckField()}><HiPlus size={20} />&nbsp;New Deck</Button>
+        <Button text withicon onClick={() => this.setState({isCreatingDeck: !this.state.isCreatingDeck})}><HiPlus size={20} />&nbsp;New Deck</Button>
       );
     }
 
@@ -105,7 +109,7 @@ export default class DeckList extends React.Component {
         <div>
           <div className="animate-pulse relative rounded shadow my-2">
             <div className="h-16 p-2">
-            <div className="mt-2 h-4 bg-gray-300 rounded w-48"></div>
+              <div className="mt-2 h-4 bg-gray-300 rounded w-48"></div>
             </div>
           </div>
         </div>
@@ -114,14 +118,28 @@ export default class DeckList extends React.Component {
 
 
     const listItems = this.state.decks && this.state.decks.map((d) =>
-      <div id={d.ref['@ref'].id} className="relative rounded shadow my-2" onClick={(e) => {this.props.setActiveDeck(d)}}>
+      <div id={d.ref['@ref'].id} className="relative rounded shadow my-2 cursor-pointer" onClick={(e) => {this.props.setActiveDeck(d)}}>
         <div className="h-16 p-2">
           <p className="">{d.data.name}</p>
           <div className="absolute right-2 inset-y-2 flex items-center">
-            <Button icon onClick={() => this.deleteDeck({'id': d.ref['@ref'].id, 'secret': this.props.secret})}><HiOutlineTrash size={24} /></Button>
+            <Tooltip content="Delete">
+              <Button icon
+                onClick={(e) => {
+                this.setState({
+                  isConfirmationDialogOpen: true,
+                  onConfirm: () => {
+                    this.setState({isConfirmationDialogOpen: false});
+                    this.deleteDeck({
+                      'id': d.ref['@ref'].id,
+                      'secret': this.props.secret
+                    })
+                  }
+                });
+                e.stopPropagation();
+              }}><HiOutlineTrash size={24} /></Button>
+            </Tooltip>
           </div>
         </div>
-
       </div>
     );
 
@@ -130,6 +148,7 @@ export default class DeckList extends React.Component {
         {listItems}
         {loadingDeckField}
         {newDeckField}
+        {this.state.isConfirmationDialogOpen && <ConfirmationDialog onConfirm={this.state.onConfirm} close={this.handleCloseConfirmationDialog} confirmButtonContent="Delete Deck" content="Are you sure you want to delete this deck?" />}
       </div>
     )
   }

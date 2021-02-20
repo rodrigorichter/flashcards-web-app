@@ -21,7 +21,7 @@ function Button(props) {
   return (
     <button className={(props.className || "") + " " + className}
             onClick={props.onClick}
-    >
+            data-tip={props.dataTip}>
       {props.children}
     </button>
   );
